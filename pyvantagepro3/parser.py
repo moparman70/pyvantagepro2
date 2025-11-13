@@ -259,6 +259,149 @@ class LoopDataParserRevB(DataParser):
         return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"
 
 
+class HighLowParserRevB(DataParser):
+    """Parse data returned by the 'LOOP' command. It contains all of the
+    real-time data that can be read from the Davis VantagePro2."""
+
+    # Loop data format (RevB)
+    LOOP_FORMAT = (
+        ("DailyLowBarometer", "H"),
+        ("DailyHighBarometer", "H"),
+        ("MonthlyLowBar", "H"),
+        ("MonthlyHighBar", "H"),
+        ("YearLowBarometer", "H"),
+        ("YearlyHighBarometer", "H"),
+        ("TimeOfDayLowBar", "H"),
+        ("TimeOfDayHighBar", "H"),
+        ("DailyHighWindSpeed", "B"),
+        ("TimeOfHighWindSpeed", "H"),
+        ("MonthHighWindSpeed", "B"),
+        ("YearHighWindSpeed", "B"),
+        ("DayHiInsideTemp", "H"),
+        ("DayLowInsideTemp", "H"),
+        ("TimeDayHiInTemp", "H"),
+        ("TimeDayLowInTemp", "H"),
+        ("MonthLowInTemp", "H"),
+        ("MonthHiInTemp", "H"),
+        ("YearLowInTemp", "H"),
+        ("YearHiInTemp", "H"),
+        ("DayHiInHum", "B"),
+        ("DayLowInHum", "B"),
+        ("TimeDayHiInHum", "H"),
+        ("TimeDayLowInHum", "H"),
+        ("MonthHiInHum", "B"),
+        ("MonthLowInHum", "B"),
+        ("YearHiInHum", "B"),
+        ("YearLowInHum", "B"),
+        ("DayLowOutTemp", "H"),
+        ("DayHiOutTemp", "H"),
+        ("TimeDayLowOutTemp", "H"),
+        ("TimeDayHiOutTemp", "H"),
+        ("MonthHiOutTemp", "H"),
+        ("MonthLowOutTemp", "H"),
+        ("YearHiOutTemp", "H"),
+        ("YearLowOutTemp", "H"),
+        ("DayLowDewPoint", "H"),
+        ("DayHiDewPoint", "H"),
+        ("TimeDayLowDewPoint", "H"),
+        ("TimeDayHiDewPoint", "H"),
+        ("MonthHiDewPoint", "H"),
+        ("MonthLowDewPoint", "H"),
+        ("YearHiDewPoint", "H"),
+        ("YearLowDewPoint", "H"),
+        ("DayLowWindChill", "H"),
+        ("TimeDayLowChill", "H"),
+        ("MonthLowWindChill", "H"),
+        ("YearLowWindChill", "H"),
+        ("DayHighHeat", "H"),
+        ("TimeofDayHighHeat", "H"),
+        ("MonthHighHeat", "H"),
+        ("YearHighHeat", "H"),
+        ("DayHighTHSW", "H"),
+        ("TimeofDayHighTHSW", "H"),
+        ("MonthHighTHSW", "H"),
+        ("YearHighTHSW", "H"),
+        ("DayHighSolarRad", "H"),
+        ("TimeofDayHighSolar", "H"),
+        ("MonthHighSolarRad", "H"),
+        ("YearHighSolarRad", "H"),
+        ("DayHighUV", "B"),
+        ("TimeofDayHighUV", "H"),
+        ("MonthHighUV", "B"),
+        ("YearHighUV", "B"),
+        ("DayHighRainRate", "H"),
+        ("TimeofDayHighRainRate", "H"),
+        ("HourHighRainRate", "H"),
+        ("MonthHighRainRate", "H"),
+        ("YearHighRainRate", "H"),
+        ("DayLowTemperature", "15s"),
+        ("DayHiTemperature", "15s"),
+        ("TimeDayLowTemperature", "30s"),
+        ("TimeDayHiTemperature", "30s"),
+        ("MonthHiTemperature", "15s"),
+        ("MonthLowTemperature", "15s"),
+        ("YearHiTemperature", "15s"),
+        ("YearLowTemperature", "15s"),
+        ("DayLowHumidity", "8s"),
+        ("DayHiHumidity", "8s"),
+        ("TimeDayLowHumidity", "16s"),
+        ("TimeDayHiHumidity", "16s"),
+        ("MonthHiHumidity", "8s"),
+        ("MonthLowHumidity", "8s"),
+        ("YearHiHumidity", "8s"),
+        ("YearLowHumidity", "8s"),
+        ("DayHiSoilMoisture", "4s"),
+        ("TimeDayHiSoilMoisture", "8s"),
+        ("DayLowSoilMoisture", "4s"),
+        ("TimeDayLowSoilMoisture", "8s"),
+        ("MonthLowSoilMoisture", "4s"),
+        ("MonthHiSoilMoisture", "4s"),
+        ("YearLowSoilMoisture", "4s"),
+        ("YearHiSoilMoisture", "4s"),
+        ("DayHiLeafWetness", "4s"),
+        ("TimeDayHiLeafWetness", "8s"),
+        ("DayLowLeafWetness", "4s"),
+        ("TimeDayLowLeafWetness", "8s"),
+        ("MonthLowLeafWetness", "4s"),
+        ("MonthHiLeafWetness", "4s"),
+        ("YearLowLeafWetness", "4s"),
+        ("YearHiLeafWetness", "4s"),
+    )
+
+    def __init__(self, data):
+        super().__init__(data, self.LOOP_FORMAT)
+        self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
+        self["DailyHighBarometer"] = self["DailyHighBarometer"] / 1000
+        self["MonthlyLowBar"] = self["MonthlyLowBar"] / 1000
+        self["MonthlyHighBar"] = self["MonthlyHighBar"] / 1000
+        self["YearLowBarometer"] = self["YearLowBarometer"] / 1000
+        self["YearlyHighBarometer"] = self["YearlyHighBarometer"] / 1000
+        self["TimeOfDayLowBar"] = self["TimeOfDayLowBar"] / 1000
+        self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
+        self["TTimeOfDayHighBarempIn"] = self["TimeOfDayHighBar"] / 1000
+        self["DayHiInsideTemp"] = self["DayHiInsideTemp"] / 10
+        self["DayLowInsideTemp"] = self["DayLowInsideTemp"] / 10
+        self["MonthLowInTemp"] = self["MonthLowInTemp"] / 10
+        self["MonthHiInTemp"] = self["MonthHiInTemp"] / 10
+        self["YearLowInTemp"] = self["YearLowInTemp"] / 10
+        self["YearHiInTemp"] = self["YearHiInTemp"] / 10
+        self["DayLowOutTemp"] = self["DayLowOutTemp"] / 10
+        self["DayHiOutTemp"] = self["DayHiOutTemp"] / 10
+        self["MonthHiOutTemp"] = self["MonthHiOutTemp"] / 10
+        self["MonthLowOutTemp"] = self["MonthLowOutTemp"] / 10
+        self["YearHiOutTemp"] = self["YearHiOutTemp"] / 10
+        self["YearLowOutTemp"] = self["YearLowOutTemp"] / 10
+        self["DayHighRainRate"] = self["DayHighRainRate"] / 100
+        self["HourHighRainRate"] = self["HourHighRainRate"] / 100
+        self["MonthHighRainRate"] = self["MonthHighRainRate"] / 100
+        self["YearHighRainRate"] = self["YearHighRainRate"] / 100
+        self["DayLowTemperature"] = self["DayLowTemperature"] / 10
+        self["DayHiTemperature"] = self["DayHiTemperature"] / 10
+        self["MonthHiTemperature"] = self["MonthHiTemperature"] / 10
+        self["MonthLowTemperature"] = self["MonthLowTemperature"] / 10
+        self["YearHiTemperature"] = self["YearHiTemperature"] / 10
+        self["YearLowTemperature"] = self["YearLowTemperature"] / 10
+        
 class ArchiveDataParserRevB(DataParser):
     '''Parse data returned by the 'LOOP' command. It contains all of the
     real-time data that can be read from the Davis VantagePro2.'''
@@ -361,3 +504,4 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b'>BBBBBB', data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
