@@ -177,7 +177,14 @@ class VantagePro2:
     def get_hi_lows(self):
         """Get high/low data."""
 
-        return "HI"
+        self.wake_up()
+        self.send("HILOWS", self.ACK)
+        current_data = self.link.read(436)
+        if isinstance(current_data, bytes):
+            if self.RevB:
+                return HighLowParserRevB(current_data)
+            raise NotImplementedError("Do not support RevB data format")
+        return None
 
     def get_archives(self, start_date=None, stop_date=None):
         """Get archive records until `start_date` and `stop_date` as
@@ -351,6 +358,7 @@ class VantagePro2:
             self.RevB = False
         else:
             self.RevA = False
+
 
 
 
