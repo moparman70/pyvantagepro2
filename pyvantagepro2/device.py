@@ -177,13 +177,12 @@ class VantagePro2:
     def get_hi_lows(self):
         """Get high/low data."""
 
-        """Returns the real-time data as a `Dict`."""
         self.wake_up()
-        self.send("LOOP 1", self.ACK)
-        current_data = self.link.read(99)
+        self.send("HILOWS", self.ACK)
+        current_data = self.link.read(436)
         if isinstance(current_data, bytes):
             if self.RevB:
-                return LoopDataParserRevB(current_data, datetime.now())
+                return HighLowParserRevB(current_data)
             raise NotImplementedError("Do not support RevB data format")
         return None
 
@@ -359,4 +358,3 @@ class VantagePro2:
             self.RevB = False
         else:
             self.RevA = False
-
