@@ -1,16 +1,25 @@
-"""pyvantagepro2.parser-------------------Allows parsing Vantage Pro2 data."""
+"""
+pyvantagepro2.parser
+-------------------
 
-from array import array
-from datetime import datetime
+Allows parsing Vantage Pro2 data.
+
+
+"""
+
+from __future__ import division, unicode_literals
 import struct
+from datetime import datetime
+from array import array
 
-from async_property import async_cached_property
+from .compat import bytes
+from .logger import LOGGER
+from .utils import cached_property, bytes_to_hex, Dict, bytes_to_binary, binary_to_int
 
-from .utils import Dict, binary_to_int, bytes_to_binary
 
-
-class VantageProCRC:
-    """Implements CRC algorithm, necessary for encoding and verifying data from the Davis Vantage Pro unit."""
+class VantageProCRC(object):
+    """Implements CRC algorithm, necessary for encoding and verifying data from
+    the Davis Vantage Pro unit."""
 
     CRC_TABLE = (
         0x0,
@@ -271,89 +280,78 @@ class VantageProCRC:
         0x1EF0,
     )
 
-    def __init__(self, data) -> None:
-        """Initalize some shit."""
-
+    def __init__(self, data):
         self.data = data
 
-    @async_cached_property
-    async def checksum(self):
+    @cached_property
+    def checksum(self):
         """Return CRC calc value from raw serial data."""
-
         crc = 0
         if isinstance(self.data, bytes):
-            for byte in array("B", bytes(self.data)):
+            for byte in array(str("B"), bytes(self.data)):
                 crc = self.CRC_TABLE[((crc >> 8) ^ byte)] ^ ((crc & 0xFF) << 8)
             return crc
-        return None
 
-    @async_cached_property
-    async def data_with_checksum(self):
+    @cached_property
+    def data_with_checksum(self):
         """Return packed raw CRC from raw data."""
-
         checksum = struct.pack(b">H", self.checksum)
         return b"".join([self.data, checksum])
 
-    async def check(self):
-        """Perform CRC check on raw serial data, return true if valid. A valid CRC == 0."""
-
+    def check(self):
+        """Perform CRC check on raw serial data, return true if valid.
+        A valid CRC == 0."""
         if len(self.data) != 0 and self.checksum == 0:
+            #            LOGGER.info("Check CRC : OK")
             return True
-        return False
+        else:
+            #            LOGGER.error("Check CRC : BAD")
+            return False
 
 
 class DataParser(Dict):
-    """Implements a reusable class for working with a binary data structure. It provides a named fields interface, similiar to C structures."""
+    """Implements a reusable class for working with a binary data structure.
+    It provides a named fields interface, similiar to C structures."""
 
-    def __init__(self, data, data_format, order="=") -> None:
-        """Initalize some shit."""
-
-        super().__init__()
-        self.fields, format_t = zip(*data_format, strict=False)
+    def __init__(self, data, data_format, order="="):
+        super(DataParser, self).__init__()
+        self.fields, format_t = zip(*data_format)
         self.crc_error = False
         if "CRC" in self.fields:
             self.crc_error = not VantageProCRC(data).check()
-        format_t = str("{}{}".format(order, "".join(format_t)))
+        format_t = str("%s%s" % (order, "".join(format_t)))
         self.struct = struct.Struct(format=format_t)
         # save raw_bytes
         self.raw_bytes = data
         # Unpacks data from `raw_bytes` and returns a dication of named fields
         data = self.struct.unpack_from(self.raw_bytes, 0)
         self["Datetime"] = None
-        self.update(Dict(zip(self.fields, data, strict=False)))
+        self.update(Dict(zip(self.fields, data)))
 
-    @async_cached_property
-    async def raw(self):
-        """Converts bytes to hex."""
-
-        return self.raw_bytes.hex()
+    @cached_property
+    def raw(self):
+        return bytes_to_hex(self.raw_bytes)
 
     def tuple_to_dict(self, key):
         """Convert {key<->tuple} to {key1<->value2, key2<->value2 ... }."""
-
         for i, value in enumerate(self[key]):
-            self[f"{key}{i + 1:02d}"] = value
+            self["%s%.2d" % (key, i + 1)] = value
         del self[key]
 
-    async def __unicode__(self):
-        """Unicode."""
-
+    def __unicode__(self):
         name = self.__class__.__name__
-        return f"<{name} {self.raw}>"
+        return "<%s %s>" % (name, self.raw)
 
-    async def __str__(self):
-        """Str."""
-
+    def __str__(self):
         return str(self.__unicode__())
 
-    async def __repr__(self):
-        """Repr."""
-
+    def __repr__(self):
         return str(self.__unicode__())
 
 
 class LoopDataParserRevB(DataParser):
-    """Parse data returned by the 'LOOP' command. It contains all of the real-time data that can be read from the Davis VantagePro2."""
+    """Parse data returned by the 'LOOP' command. It contains all of the
+    real-time data that can be read from the Davis VantagePro2."""
 
     # Loop data format (RevB)
     LOOP_FORMAT = (
@@ -401,9 +399,7 @@ class LoopDataParserRevB(DataParser):
         ("CRC", "H"),
     )
 
-    def __init__(self, data, dtime) -> None:
-        """Initalize some shit."""
-
+    def __init__(self, data, dtime):
         super().__init__(data, self.LOOP_FORMAT)
         self["Datetime"] = dtime
         self["Barometer"] = self["Barometer"] / 1000
@@ -473,23 +469,23 @@ class LoopDataParserRevB(DataParser):
         for i in range(1, 8):
             data = self.raw_bytes[73 + i : 74 + i]
             self["AlarmExTempHum"] = bytes_to_binary(data)
-            self[f"{'AlarmEx'}{i:02d}{'LowTemp'}"] = int(self["AlarmExTempHum"][0])
-            self[f"{'AlarmEx'}{i:02d}{'HighTemp'}"] = int(self["AlarmExTempHum"][1])
-            self[f"{'AlarmEx'}{i:02d}{'LowHum'}"] = int(self["AlarmExTempHum"][2])
-            self[f"{'AlarmEx'}{i:02d}{'HighHum'}"] = int(self["AlarmExTempHum"][3])
+            self["AlarmEx%.2dLowTemp" % i] = int(self["AlarmExTempHum"][0])
+            self["AlarmEx%.2dHighTemp" % i] = int(self["AlarmExTempHum"][1])
+            self["AlarmEx%.2dLowHum" % i] = int(self["AlarmExTempHum"][2])
+            self["AlarmEx%.2dHighHum" % i] = int(self["AlarmExTempHum"][3])
         del self["AlarmExTempHum"]
         # AlarmSoilLeaf 8bits, 4 bytes
         for i in range(1, 5):
             data = self.raw_bytes[81 + i : 82 + i]
             self["AlarmSoilLeaf"] = bytes_to_binary(data)
-            self[f"{'Alarm'}{i:02d}{'LowLeafWet'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'HighLeafWet'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'LowSoilMois'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'HighSoilMois'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'LowLeafTemp'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'HighLeafTemp'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'LowSoilTemp'}"] = int(self["AlarmSoilLeaf"][0])
-            self[f"{'Alarm'}{i:02d}{'HighSoilTemp'}"] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dLowLeafWet" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dHighLeafWet" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dLowSoilMois" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dHighSoilMois" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dLowLeafTemp" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dHighLeafTemp" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dLowSoilTemp" % i] = int(self["AlarmSoilLeaf"][0])
+            self["Alarm%.2dHighSoilTemp" % i] = int(self["AlarmSoilLeaf"][0])
         del self["AlarmSoilLeaf"]
         # delete unused values
         del self["LOO"]
@@ -505,23 +501,168 @@ class LoopDataParserRevB(DataParser):
         self.tuple_to_dict("LeafWetness")
         self.tuple_to_dict("SoilMoist")
 
-    async def unpack_storm_date(self):
+    def unpack_storm_date(self):
         """Given a packed storm date field, unpack and return date."""
-        date = await bytes_to_binary(self.raw_bytes[48:50])
+        date = bytes_to_binary(self.raw_bytes[48:50])
         date = date[8:16] + date[0:8]
-        year = await binary_to_int(date, 0, 7) + 2000
-        day = await binary_to_int(date, 7, 12)
-        month = await binary_to_int(date, 12, 16)
-        return f"{year}-{month}-{day}"
+        year = binary_to_int(date, 0, 7) + 2000
+        day = binary_to_int(date, 7, 12)
+        month = binary_to_int(date, 12, 16)
+        return "%s-%s-%s" % (year, month, day)
 
-    async def unpack_time(self, time):
+    def unpack_time(self, time):
         """Given a packed time field, unpack and return "HH:MM" string."""
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
-        return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
+        return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"
+
+
+class HighLowParserRevB(DataParser):
+    """Parse data returned by the 'LOOP' command. It contains all of the
+    real-time data that can be read from the Davis VantagePro2."""
+
+    # Loop data format (RevB)
+    LOOP_FORMAT = (
+        ("DailyLowBarometer", "H"),
+        ("DailyHighBarometer", "H"),
+        ("MonthlyLowBar", "H"),
+        ("MonthlyHighBar", "H"),
+        ("YearLowBarometer", "H"),
+        ("YearlyHighBarometer", "H"),
+        ("TimeOfDayLowBar", "H"),
+        ("TimeOfDayHighBar", "H"),
+        ("DailyHighWindSpeed", "B"),
+        ("TimeOfHighWindSpeed", "H"),
+        ("MonthHighWindSpeed", "B"),
+        ("YearHighWindSpeed", "B"),
+        ("DayHiInsideTemp", "H"),
+        ("DayLowInsideTemp", "H"),
+        ("TimeDayHiInTemp", "H"),
+        ("TimeDayLowInTemp", "H"),
+        ("MonthLowInTemp", "H"),
+        ("MonthHiInTemp", "H"),
+        ("YearLowInTemp", "H"),
+        ("YearHiInTemp", "H"),
+        ("DayHiInHum", "B"),
+        ("DayLowInHum", "B"),
+        ("TimeDayHiInHum", "H"),
+        ("TimeDayLowInHum", "H"),
+        ("MonthHiInHum", "B"),
+        ("MonthLowInHum", "B"),
+        ("YearHiInHum", "B"),
+        ("YearLowInHum", "B"),
+        ("DayLowOutTemp", "H"),
+        ("DayHiOutTemp", "H"),
+        ("TimeDayLowOutTemp", "H"),
+        ("TimeDayHiOutTemp", "H"),
+        ("MonthHiOutTemp", "H"),
+        ("MonthLowOutTemp", "H"),
+        ("YearHiOutTemp", "H"),
+        ("YearLowOutTemp", "H"),
+        ("DayLowDewPoint", "H"),
+        ("DayHiDewPoint", "H"),
+        ("TimeDayLowDewPoint", "H"),
+        ("TimeDayHiDewPoint", "H"),
+        ("MonthHiDewPoint", "H"),
+        ("MonthLowDewPoint", "H"),
+        ("YearHiDewPoint", "H"),
+        ("YearLowDewPoint", "H"),
+        ("DayLowWindChill", "H"),
+        ("TimeDayLowChill", "H"),
+        ("MonthLowWindChill", "H"),
+        ("YearLowWindChill", "H"),
+        ("DayHighHeat", "H"),
+        ("TimeofDayHighHeat", "H"),
+        ("MonthHighHeat", "H"),
+        ("YearHighHeat", "H"),
+        ("DayHighTHSW", "H"),
+        ("TimeofDayHighTHSW", "H"),
+        ("MonthHighTHSW", "H"),
+        ("YearHighTHSW", "H"),
+        ("DayHighSolarRad", "H"),
+        ("TimeofDayHighSolar", "H"),
+        ("MonthHighSolarRad", "H"),
+        ("YearHighSolarRad", "H"),
+        ("DayHighUV", "B"),
+        ("TimeofDayHighUV", "H"),
+        ("MonthHighUV", "B"),
+        ("YearHighUV", "B"),
+        ("DayHighRainRate", "H"),
+        ("TimeofDayHighRainRate", "H"),
+        ("HourHighRainRate", "H"),
+        ("MonthHighRainRate", "H"),
+        ("YearHighRainRate", "H"),
+        ("DayLowTemperature", "15s"),
+        ("DayHiTemperature", "15s"),
+        ("TimeDayLowTemperature", "30s"),
+        ("TimeDayHiTemperature", "30s"),
+        ("MonthHiTemperature", "15s"),
+        ("MonthLowTemperature", "15s"),
+        ("YearHiTemperature", "15s"),
+        ("YearLowTemperature", "15s"),
+        ("DayLowHumidity", "8s"),
+        ("DayHiHumidity", "8s"),
+        ("TimeDayLowHumidity", "16s"),
+        ("TimeDayHiHumidity", "16s"),
+        ("MonthHiHumidity", "8s"),
+        ("MonthLowHumidity", "8s"),
+        ("YearHiHumidity", "8s"),
+        ("YearLowHumidity", "8s"),
+        ("DayHiSoilMoisture", "4s"),
+        ("TimeDayHiSoilMoisture", "8s"),
+        ("DayLowSoilMoisture", "4s"),
+        ("TimeDayLowSoilMoisture", "8s"),
+        ("MonthLowSoilMoisture", "4s"),
+        ("MonthHiSoilMoisture", "4s"),
+        ("YearLowSoilMoisture", "4s"),
+        ("YearHiSoilMoisture", "4s"),
+        ("DayHiLeafWetness", "4s"),
+        ("TimeDayHiLeafWetness", "8s"),
+        ("DayLowLeafWetness", "4s"),
+        ("TimeDayLowLeafWetness", "8s"),
+        ("MonthLowLeafWetness", "4s"),
+        ("MonthHiLeafWetness", "4s"),
+        ("YearLowLeafWetness", "4s"),
+        ("YearHiLeafWetness", "4s"),
+    )
+
+    def __init__(self, data):
+        super().__init__(data, self.LOOP_FORMAT)
+        self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
+        self["DailyHighBarometer"] = self["DailyHighBarometer"] / 1000
+        self["MonthlyLowBar"] = self["MonthlyLowBar"] / 1000
+        self["MonthlyHighBar"] = self["MonthlyHighBar"] / 1000
+        self["YearLowBarometer"] = self["YearLowBarometer"] / 1000
+        self["YearlyHighBarometer"] = self["YearlyHighBarometer"] / 1000
+        self["TimeOfDayLowBar"] = self["TimeOfDayLowBar"] / 1000
+        self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
+        self["TTimeOfDayHighBarempIn"] = self["TimeOfDayHighBar"] / 1000
+        self["DayHiInsideTemp"] = self["DayHiInsideTemp"] / 10
+        self["DayLowInsideTemp"] = self["DayLowInsideTemp"] / 10
+        self["MonthLowInTemp"] = self["MonthLowInTemp"] / 10
+        self["MonthHiInTemp"] = self["MonthHiInTemp"] / 10
+        self["YearLowInTemp"] = self["YearLowInTemp"] / 10
+        self["YearHiInTemp"] = self["YearHiInTemp"] / 10
+        self["DayLowOutTemp"] = self["DayLowOutTemp"] / 10
+        self["DayHiOutTemp"] = self["DayHiOutTemp"] / 10
+        self["MonthHiOutTemp"] = self["MonthHiOutTemp"] / 10
+        self["MonthLowOutTemp"] = self["MonthLowOutTemp"] / 10
+        self["YearHiOutTemp"] = self["YearHiOutTemp"] / 10
+        self["YearLowOutTemp"] = self["YearLowOutTemp"] / 10
+        self["DayHighRainRate"] = self["DayHighRainRate"] / 100
+        self["HourHighRainRate"] = self["HourHighRainRate"] / 100
+        self["MonthHighRainRate"] = self["MonthHighRainRate"] / 100
+        self["YearHighRainRate"] = self["YearHighRainRate"] / 100
+        self["DayLowTemperature"] = self["DayLowTemperature"] / 10
+        self["DayHiTemperature"] = self["DayHiTemperature"] / 10
+        self["MonthHiTemperature"] = self["MonthHiTemperature"] / 10
+        self["MonthLowTemperature"] = self["MonthLowTemperature"] / 10
+        self["YearHiTemperature"] = self["YearHiTemperature"] / 10
+        self["YearLowTemperature"] = self["YearLowTemperature"] / 10
 
 
 class ArchiveDataParserRevB(DataParser):
-    """Parse data returned by the 'LOOP' command. It contains all of the real-time data that can be read from the Davis VantagePro2."""
+    """Parse data returned by the 'LOOP' command. It contains all of the
+    real-time data that can be read from the Davis VantagePro2."""
 
     ARCHIVE_FORMAT = (
         ("DateStamp", "H"),
@@ -555,10 +696,8 @@ class ArchiveDataParserRevB(DataParser):
         ("SoilMoist", "4s"),
     )
 
-    def __init__(self, data) -> None:
-        """Initalize some shit."""
-
-        super().__init__(data, self.ARCHIVE_FORMAT)
+    def __init__(self, data):
+        super(ArchiveDataParserRevB, self).__init__(data, self.ARCHIVE_FORMAT)
         self["raw_datestamp"] = bytes_to_binary(self.raw_bytes[0:4])
         self["Datetime"] = unpack_dmp_date_time(self["DateStamp"], self["TimeStamp"])
         del self["DateStamp"]
@@ -593,23 +732,17 @@ class ArchiveDataParserRevB(DataParser):
 
 
 class DmpHeaderParser(DataParser):
-    """Dump headers."""
-
     DMP_FORMAT = (
         ("Pages", "H"),
         ("Offset", "H"),
         ("CRC", "H"),
     )
 
-    def __init__(self, data) -> None:
-        """Initalize some shit."""
-
-        super().__init__(data, self.DMP_FORMAT)
+    def __init__(self, data):
+        super(DmpHeaderParser, self).__init__(data, self.DMP_FORMAT)
 
 
 class DmpPageParser(DataParser):
-    """Dump Page Parser."""
-
     DMP_FORMAT = (
         ("Index", "B"),
         ("Records", "260s"),
@@ -617,33 +750,29 @@ class DmpPageParser(DataParser):
         ("CRC", "H"),
     )
 
-    def __init__(self, data) -> None:
-        """Initalize some shit."""
-
-        super().__init__(data, self.DMP_FORMAT)
+    def __init__(self, data):
+        super(DmpPageParser, self).__init__(data, self.DMP_FORMAT)
 
 
-async def pack_dmp_date_time(d):
+def pack_dmp_date_time(d):
     """Pack `datetime` to DateStamp and TimeStamp VantagePro2 with CRC."""
     vpdate = d.day + d.month * 32 + (d.year - 2000) * 512
     vptime = 100 * d.hour + d.minute
     data = struct.pack(b"HH", vpdate, vptime)
-    return await VantageProCRC(data).data_with_checksum  # pyright: ignore[reportGeneralTypeIssues]
+    return VantageProCRC(data).data_with_checksum
 
 
-async def unpack_dmp_date_time(date, time):
-    """Unpack `date` and `time` to datetime."""
-
+def unpack_dmp_date_time(date, time):
+    """Unpack `date` and `time` to datetime"""
     if date != 0xFFFF and time != 0xFFFF:
         day = date & 0x1F  # 5 bits
         month = (date >> 5) & 0x0F  # 4 bits
         year = ((date >> 9) & 0x7F) + 2000  # 7 bits
         hour, min_ = divmod(time, 100)
         return datetime(year, month, day, hour, min_)
-    return None
 
 
-async def pack_datetime(dtime):
+def pack_datetime(dtime):
     """Returns packed `dtime` with CRC."""
     data = struct.pack(
         b">BBBBBB",
@@ -654,11 +783,11 @@ async def pack_datetime(dtime):
         dtime.month,
         dtime.year - 1900,
     )
-    return await VantageProCRC(data).data_with_checksum  # pyright: ignore[reportGeneralTypeIssues]
+    return VantageProCRC(data).data_with_checksum
 
 
-async def unpack_datetime(data):
+def unpack_datetime(data):
     """Return unpacked datetime `data` and check CRC."""
-    await VantageProCRC(data).check()
+    VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
