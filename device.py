@@ -182,7 +182,7 @@ class VantagePro2:
         current_data = self.link.read(436)
         if isinstance(current_data, bytes):
             if self.RevB:
-                return HighLowParserRevB(current_data)
+                return current_data
             raise NotImplementedError("Do not support RevB data format")
         return None
 
