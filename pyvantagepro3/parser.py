@@ -121,6 +121,46 @@ class DataParser(Dict):
         return str(self.__unicode__())
 
 
+
+class HiLowParser(Dict):
+    """Implements a reusable class for working with a binary data structure.
+    It provides a named fields interface, similiar to C structures."""
+
+    def __init__(self, data, data_format, order="="):
+        super(DataParser, self).__init__()
+        self.fields, format_t = zip(*data_format)
+        self.crc_error = False
+        if "CRC" in self.fields:
+            self.crc_error = not VantageProCRC(data).check()
+        format_t = str("%s%s" % (order, "".join(format_t)))
+        self.struct = struct.Struct(format=format_t)
+        # save raw_bytes
+        self.raw_bytes = data
+        # Unpacks data from `raw_bytes` and returns a dication of named fields
+        data = self.struct.unpack_from(self.raw_bytes, 0)
+        self.update(Dict(zip(self.fields, data)))
+
+    @cached_property
+    def raw(self):
+        return bytes_to_hex(self.raw_bytes)
+
+    def tuple_to_dict(self, key):
+        """Convert {key<->tuple} to {key1<->value2, key2<->value2 ... }."""
+        for i, value in enumerate(self[key]):
+            self["%s%.2d" % (key, i + 1)] = value
+        del self[key]
+
+    def __unicode__(self):
+        name = self.__class__.__name__
+        return "<%s %s>" % (name, self.raw)
+
+    def __str__(self):
+        return str(self.__unicode__())
+
+    def __repr__(self):
+        return str(self.__unicode__())
+
+
 class LoopDataParserRevB(DataParser):
     '''Parse data returned by the 'LOOP' command. It contains all of the
     real-time data that can be read from the Davis VantagePro2.'''
@@ -259,7 +299,7 @@ class LoopDataParserRevB(DataParser):
         return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"
 
 
-class HighLowParserRevB(DataParser):
+class HighLowParserRevB(HiLowParser):
     """Parse data returned by the 'LOOP' command. It contains all of the
     real-time data that can be read from the Davis VantagePro2."""
 
@@ -504,5 +544,6 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b'>BBBBBB', data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
 
 
