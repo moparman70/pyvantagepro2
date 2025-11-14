@@ -619,7 +619,7 @@ class HighLowParserRevB(HiLowParser):
             self["MonthlyLowBar"] = self["MonthlyLowBar"] / 1000
             self["MonthlyHighBar"] = self["MonthlyHighBar"] / 1000
             self["YearLowBarometer"] = self["YearLowBarometer"] / 1000
-            self["YearlyHighBarometer"] = self["YearlyHighBarometer"] / 1000
+            self["YearHighBarometer"] = self["YearHighBarometer"] / 1000
             self["TimeOfDayLowBar"] = self["TimeOfDayLowBar"] / 100
             self["TimeOfDayHighBar"] = self["TimeOfDayHighBar"] / 100
             self["TimeOfHighWindSpeed"] = self["TimeOfHighWindSpeed"] / 100
@@ -880,6 +880,7 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b'>BBBBBB', data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
 
 
 
