@@ -310,7 +310,7 @@ class HighLowParserRevB(HiLowParser):
         ("MonthlyLowBar", "H"),
         ("MonthlyHighBar", "H"),
         ("YearLowBarometer", "H"),
-        ("YearlyHighBarometer", "H"),
+        ("YearHighBarometer", "H"),
         ("TimeOfDayLowBar", "H"),
         ("TimeOfDayHighBar", "H"),
         ("DailyHighWindSpeed", "B"),
@@ -374,73 +374,405 @@ class HighLowParserRevB(HiLowParser):
         ("HourHighRainRate", "H"),
         ("MonthHighRainRate", "H"),
         ("YearHighRainRate", "H"),
-        ("DayLowTemperature", "15s"),
-        ("DayHiTemperature", "15s"),
-        ("TimeDayLowTemperature", "30s"),
-        ("TimeDayHiTemperature", "30s"),
-        ("MonthHiTemperature", "15s"),
-        ("MonthLowTemperature", "15s"),
-        ("YearHiTemperature", "15s"),
-        ("YearLowTemperature", "15s"),
-        ("DayLowHumidity", "8s"),
-        ("DayHiHumidity", "8s"),
-        ("TimeDayLowHumidity", "16s"),
-        ("TimeDayHiHumidity", "16s"),
-        ("MonthHiHumidity", "8s"),
-        ("MonthLowHumidity", "8s"),
-        ("YearHiHumidity", "8s"),
-        ("YearLowHumidity", "8s"),
-        ("DayHiSoilMoisture", "4s"),
-        ("TimeDayHiSoilMoisture", "8s"),
-        ("DayLowSoilMoisture", "4s"),
-        ("TimeDayLowSoilMoisture", "8s"),
-        ("MonthLowSoilMoisture", "4s"),
-        ("MonthHiSoilMoisture", "4s"),
-        ("YearLowSoilMoisture", "4s"),
-        ("YearHiSoilMoisture", "4s"),
-        ("DayHiLeafWetness", "4s"),
-        ("TimeDayHiLeafWetness", "8s"),
-        ("DayLowLeafWetness", "4s"),
-        ("TimeDayLowLeafWetness", "8s"),
-        ("MonthLowLeafWetness", "4s"),
-        ("MonthHiLeafWetness", "4s"),
-        ("YearLowLeafWetness", "4s"),
-        ("YearHiLeafWetness", "4s"),
+        ("DayLowTempExtraTemp2", "B"),
+        ("DayLowTempExtraTemp3", "B"),
+        ("DayLowTempExtraTemp4", "B"),
+        ("DayLowTempExtraTemp5", "B"),
+        ("DayLowTempExtraTemp6", "B"),
+        ("DayLowTempExtraTemp7", "B"),
+        ("DayLowTempExtraTemp8", "B"),
+        ("DayLowTempSoil1", "B"),
+        ("DayLowTempSoil2", "B"),
+        ("DayLowTempSoil3", "B"),
+        ("DayLowTempSoil4", "B"),
+        ("DayLowTempLeaf1", "B"),
+        ("DayLowTempLeaf2", "B"),
+        ("DayLowTempLeaf3", "B"),
+        ("DayLowTempLeaf4", "B"),
+        ("DayHiTemperature", "B"),
+        ("TimeDayLowTempExtraTemp2", "H"),
+        ("TimeDayLowTempExtraTemp3", "H"),
+        ("TimeDayLowTempExtraTemp4", "H"),
+        ("TimeDayLowTempExtraTemp5", "H"),
+        ("TimeDayLowTempExtraTemp6", "H"),
+        ("TimeDayLowTempExtraTemp7", "H"),
+        ("TimeDayLowTempExtraTemp8", "H"),
+        ("TimeDayLowTempSoil1", "H"),
+        ("TimeDayLowTempSoil2", "H"),
+        ("TimeDayLowTempSoil3", "H"),
+        ("TimeDayLowTempSoil4", "H"),
+        ("TimeDayLowTempLeaf1", "H"),
+        ("TimeDayLowTempLeaf2", "H"),
+        ("TimeDayLowTempLeaf3", "H"),
+        ("TimeDayLowTempLeaf4", "H"),
+        ("TimeDayHiTempExtraTemp2", "H"),
+        ("TimeDayHiTempExtraTemp3", "H"),
+        ("TimeDayHiTempExtraTemp4", "H"),
+        ("TimeDayHiTempExtraTemp5", "H"),
+        ("TimeDayHiTempExtraTemp6", "H"),
+        ("TimeDayHiTempExtraTemp7", "H"),
+        ("TimeDayHiTempExtraTemp8", "H"),
+        ("TimeDayHiTempSoil1", "H"),
+        ("TimeDayHiTempSoil2", "H"),
+        ("TimeDayHiTempSoil3", "H"),
+        ("TimeDayHiTempSoil4", "H"),
+        ("TimeDayHiTempLeaf1", "H"),
+        ("TimeDayHiTempLeaf2", "H"),
+        ("TimeDayHiTempLeaf3", "H"),
+        ("TimeDayHiTempLeaf4", "H"),
+        ("MonthHiTempExtraTemp2", "B"),
+        ("MonthHiTempExtraTemp3", "B"),
+        ("MonthHiTempExtraTemp4", "B"),
+        ("MonthHiTempExtraTemp5", "B"),
+        ("MonthHiTempExtraTemp6", "B"),
+        ("MonthHiTempExtraTemp7", "B"),
+        ("MonthHiTempExtraTemp8", "B"),
+        ("MonthHiTempSoil1", "B"),
+        ("MonthHiTempSoil2", "B"),
+        ("MonthHiTempSoil3", "B"),
+        ("MonthHiTempSoil4", "B"),
+        ("MonthHiTempLeaf1", "B"),
+        ("MonthHiTempLeaf2", "B"),
+        ("MonthHiTempLeaf3", "B"),
+        ("MonthHiTempLeaf4", "B"),
+        ("MonthLowTempExtraTemp2", "B"),
+        ("MonthLowTempExtraTemp3", "B"),
+        ("MonthLowTempExtraTemp4", "B"),
+        ("MonthLowTempExtraTemp5", "B"),
+        ("MonthLowTempExtraTemp6", "B"),
+        ("MonthLowTempExtraTemp7", "B"),
+        ("MonthLowTempExtraTemp8", "B"),
+        ("MonthLowTempSoil1", "B"),
+        ("MonthLowTempSoil2", "B"),
+        ("MonthLowTempSoil3", "B"),
+        ("MonthLowTempSoil4", "B"),
+        ("MonthLowTempLeaf1", "B"),
+        ("MonthLowTempLeaf2", "B"),
+        ("MonthLowTempLeaf3", "B"),
+        ("MonthLowTempLeaf4", "B"),
+        ("YearHiTempExtraTemp2", "B"),
+        ("YearHiTempExtraTemp3", "B"),
+        ("YearHiTempExtraTemp4", "B"),
+        ("YearHiTempExtraTemp5", "B"),
+        ("YearHiTempExtraTemp6", "B"),
+        ("YearHiTempExtraTemp7", "B"),
+        ("YearHiTempExtraTemp8", "B"),
+        ("YearHiTempSoil1", "B"),
+        ("YearHiTempSoil2", "B"),
+        ("YearHiTempSoil3", "B"),
+        ("YearHiTempSoil4", "B"),
+        ("YearHiTempLeaf1", "B"),
+        ("YearHiTempLeaf2", "B"),
+        ("YearHiTempLeaf3", "B"),
+        ("YearHiTempLeaf4", "B"),
+        ("YearLowTempExtraTemp2", "B"),
+        ("YearLowTempExtraTemp3", "B"),
+        ("YearLowTempExtraTemp4", "B"),
+        ("YearLowTempExtraTemp5", "B"),
+        ("YearLowTempExtraTemp6", "B"),
+        ("YearLowTempExtraTemp7", "B"),
+        ("YearLowTempExtraTemp8", "B"),
+        ("YearLowTempSoil1", "B"),
+        ("YearLowTempSoil2", "B"),
+        ("YearLowTempSoil3", "B"),
+        ("YearLowTempSoil4", "B"),
+        ("YearLowTempLeaf1", "B"),
+        ("YearLowTempLeaf2", "B"),
+        ("YearLowTempLeaf3", "B"),
+        ("YearLowTempLeaf4", "B"),
+        ("DayLowOutHum", "B"),
+        ("DayLowOutExtraHum2", "B"),
+        ("DayLowOutExtraHum3", "B"),
+        ("DayLowOutExtraHum4", "B"),
+        ("DayLowOutExtraHum5", "B"),
+        ("DayLowOutExtraHum6", "B"),
+        ("DayLowOutExtraHum7", "B"),
+        ("DayLowOutExtraHum8", "B"),
+        ("DayHiOutHum", "B"),
+        ("DayHiOutExtraHum2", "B"),
+        ("DayHiOutExtraHum3", "B"),
+        ("DayHiOutExtraHum4", "B"),
+        ("DayHiOutExtraHum5", "B"),
+        ("DayHiOutExtraHum6", "B"),
+        ("DayHiOutExtraHum7", "B"),
+        ("DayHiOutExtraHum8", "B"),
+        ("TimeDayLowOutHum", "H"),
+        ("TimeDayLowOutExtraHum2", "H"),
+        ("TimeDayLowOutExtraHum3", "H"),
+        ("TimeDayLowOutExtraHum4", "H"),
+        ("TimeDayLowOutExtraHum5", "H"),
+        ("TimeDayLowOutExtraHum6", "H"),
+        ("TimeDayLowOutExtraHum7", "H"),
+        ("TimeDayLowOutExtraHum8", "H"),
+        ("TimeDayHiOutHum", "H"),
+        ("TimeDayHiOutExtraHum2", "H"),
+        ("TimeDayHiOutExtraHum3", "H"),
+        ("TimeDayHiOutExtraHum4", "H"),
+        ("TimeDayHiOutExtraHum5", "H"),
+        ("TimeDayHiOutExtraHum6", "H"),
+        ("TimeDayHiOutExtraHum7", "H"),
+        ("TimeDayHiOutExtraHum8", "H"),
+        ("MonthHiOutHum", "B"),
+        ("MonthHiOutExtraHum2", "B"),
+        ("MonthHiOutExtraHum3", "B"),
+        ("MonthHiOutExtraHum4", "B"),
+        ("MonthHiOutExtraHum5", "B"),
+        ("MonthHiOutExtraHum6", "B"),
+        ("MonthHiOutExtraHum7", "B"),
+        ("MonthHiOutExtraHum8", "B"),
+        ("MonthLowOutHum", "B"),
+        ("MonthLowOutExtraHum2", "B"),
+        ("MonthLowOutExtraHum3", "B"),
+        ("MonthLowOutExtraHum4", "B"),
+        ("MonthLowOutExtraHum5", "B"),
+        ("MonthLowOutExtraHum6", "B"),
+        ("MonthLowOutExtraHum7", "B"),
+        ("MonthLowOutExtraHum8", "B"),
+        ("YearHiOutHum", "B"),
+        ("YearHiOutExtraHum2", "B"),
+        ("YearHiOutExtraHum3", "B"),
+        ("YearHiOutExtraHum4", "B"),
+        ("YearHiOutExtraHum5", "B"),
+        ("YearHiOutExtraHum6", "B"),
+        ("YearHiOutExtraHum7", "B"),
+        ("YearHiOutExtraHum8", "B"),
+        ("YearLowOutHum", "B"),
+        ("YearLowOutExtraHum2", "B"),
+        ("YearLowOutExtraHum3", "B"),
+        ("YearLowOutExtraHum4", "B"),
+        ("YearLowOutExtraHum5", "B"),
+        ("YearLowOutExtraHum6", "B"),
+        ("YearLowOutExtraHum7", "B"),
+        ("YearLowOutExtraHum8", "B"),
+        ("DayHiSoilMoisture1", "B"),
+        ("DayHiSoilMoisture2", "B"),
+        ("DayHiSoilMoisture3", "B"),
+        ("DayHiSoilMoisture4", "B"),
+        ("TimeDayHiSoilMoisture1", "H"),
+        ("TimeDayHiSoilMoisture2", "H"),
+        ("TimeDayHiSoilMoisture3", "H"),
+        ("TimeDayHiSoilMoisture4", "H"),
+        ("DayLowSoilMoisture1", "B"),
+        ("DayLowSoilMoisture2", "B"),
+        ("DayLowSoilMoisture3", "B"),
+        ("DayLowSoilMoisture4", "B"),
+        ("TimeDayLowSoilMoisture1", "H"),
+        ("TimeDayLowSoilMoisture2", "H"),
+        ("TimeDayLowSoilMoisture3", "H"),
+        ("TimeDayLowSoilMoisture4", "H"),
+        ("MonthLowSoilMoisture1", "B"),
+        ("MonthLowSoilMoisture2", "B"),
+        ("MonthLowSoilMoisture3", "B"),
+        ("MonthLowSoilMoisture4", "B"),
+        ("MonthHiSoilMoisture1", "B"),
+        ("MonthHiSoilMoisture2", "B"),
+        ("MonthHiSoilMoisture3", "B"),
+        ("MonthHiSoilMoisture4", "B"),
+        ("YearLowSoilMoisture1", "B"),
+        ("YearLowSoilMoisture2", "B"),
+        ("YearLowSoilMoisture3", "B"),
+        ("YearLowSoilMoisture4", "B"),
+        ("YearHiSoilMoisture1", "B"),
+        ("YearHiSoilMoisture2", "B"),
+        ("YearHiSoilMoisture3", "B"),
+        ("YearHiSoilMoisture4", "B"),
+        ("DayHiLeafWetness1", "B"),
+        ("DayHiLeafWetness2", "B"),
+        ("DayHiLeafWetness3", "B"),
+        ("DayHiLeafWetness4", "B"),
+        ("TimeDayHiLeafWetness1", "H"),
+        ("TimeDayHiLeafWetness2", "H"),
+        ("TimeDayHiLeafWetness3", "H"),
+        ("TimeDayHiLeafWetness4", "H"),
+        ("DayLowLeafWetness1", "B"),
+        ("DayLowLeafWetness2", "B"),
+        ("DayLowLeafWetness3", "B"),
+        ("DayLowLeafWetness4", "B"),
+        ("TimeDayLowLeafWetness1", "H"),
+        ("TimeDayLowLeafWetness2", "H"),
+        ("TimeDayLowLeafWetness3", "H"),
+        ("TimeDayLowLeafWetness4", "H"),
+        ("MonthLowLeafWetness1", "B"),
+        ("MonthLowLeafWetness2", "B"),
+        ("MonthLowLeafWetness3", "B"),
+        ("MonthLowLeafWetness4", "B"),
+        ("MonthHiLeafWetness1", "B"),
+        ("MonthHiLeafWetness2", "B"),
+        ("MonthHiLeafWetness3", "B"),
+        ("MonthHiLeafWetness4", "B"),
+        ("YearLowLeafWetness1", "B"),
+        ("YearLowLeafWetness2", "B"),
+        ("YearLowLeafWetness3", "B"),
+        ("YearLowLeafWetness4", "B"),
+        ("YearHiLeafWetness1", "B"),
+        ("YearHiLeafWetness2", "B"),
+        ("YearHiLeafWetness3", "B"),
+        ("YearHiLeafWetness4", "B"),
     )
-
+    
     def __init__(self, data):
-        #super().__init__(data, self.LOOP_FORMAT)
+        super().__init__(data, self.LOOP_FORMAT)
         self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
         self["DailyHighBarometer"] = self["DailyHighBarometer"] / 1000
         self["MonthlyLowBar"] = self["MonthlyLowBar"] / 1000
         self["MonthlyHighBar"] = self["MonthlyHighBar"] / 1000
         self["YearLowBarometer"] = self["YearLowBarometer"] / 1000
         self["YearlyHighBarometer"] = self["YearlyHighBarometer"] / 1000
-        self["TimeOfDayLowBar"] = self["TimeOfDayLowBar"] / 1000
-        self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
-        self["TTimeOfDayHighBarempIn"] = self["TimeOfDayHighBar"] / 1000
+        self["TimeOfDayLowBar"] = self["TimeOfDayLowBar"] / 100
+        self["TimeOfDayHighBar"] = self["TimeOfDayHighBar"] / 100
+        self["TimeOfHighWindSpeed"] = self["TimeOfHighWindSpeed"] / 100
         self["DayHiInsideTemp"] = self["DayHiInsideTemp"] / 10
         self["DayLowInsideTemp"] = self["DayLowInsideTemp"] / 10
+        self["TimeDayHiInTemp"] = self["TimeDayHiInTemp"] / 100
+        self["TimeDayLowInTemp"] = self["TimeDayLowInTemp"] / 100
         self["MonthLowInTemp"] = self["MonthLowInTemp"] / 10
         self["MonthHiInTemp"] = self["MonthHiInTemp"] / 10
         self["YearLowInTemp"] = self["YearLowInTemp"] / 10
         self["YearHiInTemp"] = self["YearHiInTemp"] / 10
+        self["TimeDayHiInHum"] = self["TimeDayHiInHum"] / 100
+        self["TimeDayLowInHum"] = self["TimeDayLowInHum"] / 100
         self["DayLowOutTemp"] = self["DayLowOutTemp"] / 10
         self["DayHiOutTemp"] = self["DayHiOutTemp"] / 10
+        self["TimeDayLowOutTemp"] = self["TimeDayLowOutTemp"] / 100
+        self["TimeDayHiOutTemp"] = self["TimeDayHiOutTemp"] / 100
         self["MonthHiOutTemp"] = self["MonthHiOutTemp"] / 10
         self["MonthLowOutTemp"] = self["MonthLowOutTemp"] / 10
         self["YearHiOutTemp"] = self["YearHiOutTemp"] / 10
         self["YearLowOutTemp"] = self["YearLowOutTemp"] / 10
+        self["TimeDayLowDewPoint"] = self["TimeDayLowDewPoint"] / 100
+        self["TimeDayHiDewPoint"] = self["TimeDayHiDewPoint"] / 100
+        self["TimeDayLowChill"] = self["TimeDayLowChill"] / 100
+        self["TimeofDayHighHeat"] = self["TimeofDayHighHeat"] / 100
+        self["TimeofDayHighTHSW"] = self["TimeofDayHighTHSW"] / 100
+        self["TimeofDayHighSolar"] = self["TimeofDayHighSolar"] / 100
+        self["TimeofDayHighUV"] = self["TimeofDayHighUV"] / 100
         self["DayHighRainRate"] = self["DayHighRainRate"] / 100
+        self["TimeofDayHighRainRate"] = self["TimeofDayHighRainRate"] / 100
         self["HourHighRainRate"] = self["HourHighRainRate"] / 100
         self["MonthHighRainRate"] = self["MonthHighRainRate"] / 100
         self["YearHighRainRate"] = self["YearHighRainRate"] / 100
-        self["DayLowTemperature"] = self["DayLowTemperature"] / 10
+        self["DayLowTempExtraTemp2"] = self["DayLowTempExtraTemp2"] / 10
+        self["DayLowTempExtraTemp3"] = self["DayLowTempExtraTemp3"] / 10
+        self["DayLowTempExtraTemp4"] = self["DayLowTempExtraTemp4"] / 10
+        self["DayLowTempExtraTemp5"] = self["DayLowTempExtraTemp5"] / 10
+        self["DayLowTempExtraTemp6"] = self["DayLowTempExtraTemp6"] / 10
+        self["DayLowTempExtraTemp7"] = self["DayLowTempExtraTemp7"] / 10
+        self["DayLowTempExtraTemp8"] = self["DayLowTempExtraTemp8"] / 10
+        self["DayLowTempSoil1"] = self["DayLowTempSoil1"] / 10
+        self["DayLowTempSoil2"] = self["DayLowTempSoil2"] / 10
+        self["DayLowTempSoil3"] = self["DayLowTempSoil3"] / 10
+        self["DayLowTempSoil4"] = self["DayLowTempSoil4"] / 10
+        self["DayLowTempLeaf1"] = self["DayLowTempLeaf1"] / 10
+        self["DayLowTempLeaf2"] = self["DayLowTempLeaf2"] / 10
+        self["DayLowTempLeaf3"] = self["DayLowTempLeaf3"] / 10
+        self["DayLowTempLeaf4"] = self["DayLowTempLeaf4"] / 10
         self["DayHiTemperature"] = self["DayHiTemperature"] / 10
-        self["MonthHiTemperature"] = self["MonthHiTemperature"] / 10
-        self["MonthLowTemperature"] = self["MonthLowTemperature"] / 10
-        self["YearHiTemperature"] = self["YearHiTemperature"] / 10
-        self["YearLowTemperature"] = self["YearLowTemperature"] / 10
+        self["TimeDayLowTempExtraTemp2"] = self["TimeDayLowTempExtraTemp2"] / 10
+        self["TimeDayLowTempExtraTemp3"] = self["TimeDayLowTempExtraTemp3"] / 10
+        self["TimeDayLowTempExtraTemp4"] = self["TimeDayLowTempExtraTemp4"] / 10
+        self["TimeDayLowTempExtraTemp5"] = self["TimeDayLowTempExtraTemp5"] / 10
+        self["TimeDayLowTempExtraTemp6"] = self["TimeDayLowTempExtraTemp6"] / 10
+        self["TimeDayLowTempExtraTemp7"] = self["TimeDayLowTempExtraTemp7"] / 10
+        self["TimeDayLowTempExtraTemp8"] = self["TimeDayLowTempExtraTemp8"] / 10
+        self["TimeDayLowTempSoil1"] = self["TimeDayLowTempSoil1"] / 100
+        self["TimeDayLowTempSoil2"] = self["TimeDayLowTempSoil2"] / 100
+        self["TimeDayLowTempSoil3"] = self["TimeDayLowTempSoil3"] / 100
+        self["TimeDayLowTempSoil4"] = self["TimeDayLowTempSoil4"] / 100
+        self["TimeDayLowTempLeaf1"] = self["TimeDayLowTempLeaf1"] / 100
+        self["TimeDayLowTempLeaf2"] = self["TimeDayLowTempLeaf2"] / 100
+        self["TimeDayLowTempLeaf3"] = self["TimeDayLowTempLeaf3"] / 100
+        self["TimeDayLowTempLeaf4"] = self["TimeDayLowTempLeaf4"] / 100
+        self["TimeDayHiTempExtraTemp2"] = self["TimeDayHiTempExtraTemp2"] / 100
+        self["TimeDayHiTempExtraTemp3"] = self["TimeDayHiTempExtraTemp3"] / 100
+        self["TimeDayHiTempExtraTemp4"] = self["TimeDayHiTempExtraTemp4"] / 100
+        self["TimeDayHiTempExtraTemp5"] = self["TimeDayHiTempExtraTemp5"] / 100
+        self["TimeDayHiTempExtraTemp6"] = self["TimeDayHiTempExtraTemp6"] / 100
+        self["TimeDayHiTempExtraTemp7"] = self["TimeDayHiTempExtraTemp7"] / 100
+        self["TimeDayHiTempExtraTemp8"] = self["TimeDayHiTempExtraTemp8"] / 100
+        self["TimeDayHiTempSoil1"] = self["TimeDayHiTempSoil1"] / 100
+        self["TimeDayHiTempSoil2"] = self["TimeDayHiTempSoil2"] / 100
+        self["TimeDayHiTempSoil3"] = self["TimeDayHiTempSoil3"] / 100
+        self["TimeDayHiTempSoil4"] = self["TimeDayHiTempSoil4"] / 100
+        self["TimeDayHiTempLeaf1"] = self["TimeDayHiTempLeaf1"] / 100
+        self["TimeDayHiTempLeaf2"] = self["TimeDayHiTempLeaf2"] / 100
+        self["TimeDayHiTempLeaf3"] = self["TimeDayHiTempLeaf3"] / 100
+        self["TimeDayHiTempLeaf4"] = self["TimeDayHiTempLeaf4"] / 100
+        self["MonthHiTempExtraTemp2"] = self["MonthHiTempExtraTemp2"] / 10
+        self["MonthHiTempExtraTemp3"] = self["MonthHiTempExtraTemp3"] / 10
+        self["MonthHiTempExtraTemp4"] = self["MonthHiTempExtraTemp4"] / 10
+        self["MonthHiTempExtraTemp5"] = self["MonthHiTempExtraTemp5"] / 10
+        self["MonthHiTempExtraTemp6"] = self["MonthHiTempExtraTemp6"] / 10
+        self["MonthHiTempExtraTemp7"] = self["MonthHiTempExtraTemp7"] / 10
+        self["MonthHiTempExtraTemp8"] = self["MonthHiTempExtraTemp8"] / 10
+        self["MonthHiTempSoil1"] = self["MonthHiTempSoil1"] / 10
+        self["MonthHiTempSoil2"] = self["MonthHiTempSoil2"] / 10
+        self["MonthHiTempSoil3"] = self["MonthHiTempSoil3"] / 10
+        self["MonthHiTempSoil4"] = self["MonthHiTempSoil4"] / 10
+        self["MonthHiTempLeaf1"] = self["MonthHiTempLeaf1"] / 10
+        self["MonthHiTempLeaf2"] = self["MonthHiTempLeaf2"] / 10
+        self["MonthHiTempLeaf3"] = self["MonthHiTempLeaf3"] / 10
+        self["MonthHiTempLeaf4"] = self["MonthHiTempLeaf4"] / 10
+        self["MonthLowTempExtraTemp2"] = self["MonthLowTempExtraTemp2"] / 10
+        self["MonthLowTempExtraTemp3"] = self["MonthLowTempExtraTemp3"] / 10
+        self["MonthLowTempExtraTemp4"] = self["MonthLowTempExtraTemp4"] / 10
+        self["MonthLowTempExtraTemp5"] = self["MonthLowTempExtraTemp5"] / 10
+        self["MonthLowTempExtraTemp6"] = self["MonthLowTempExtraTemp6"] / 10
+        self["MonthLowTempExtraTemp7"] = self["MonthLowTempExtraTemp7"] / 10
+        self["MonthLowTempExtraTemp8"] = self["MonthLowTempExtraTemp8"] / 10
+        self["MonthLowTempSoil1"] = self["MonthLowTempSoil1"] / 10
+        self["MonthLowTempSoil2"] = self["MonthLowTempSoil2"] / 10
+        self["MonthLowTempSoil3"] = self["MonthLowTempSoil3"] / 10
+        self["MonthLowTempSoil4"] = self["MonthLowTempSoil4"] / 10
+        self["MonthLowTempLeaf1"] = self["MonthLowTempLeaf1"] / 10
+        self["MonthLowTempLeaf2"] = self["MonthLowTempLeaf2"] / 10
+        self["MonthLowTempLeaf3"] = self["MonthLowTempLeaf3"] / 10
+        self["MonthLowTempLeaf4"] = self["MonthLowTempLeaf4"] / 10
+        self["YearHiTempExtraTemp2"] = self["YearHiTempExtraTemp2"] / 10
+        self["YearHiTempExtraTemp3"] = self["YearHiTempExtraTemp3"] / 10
+        self["YearHiTempExtraTemp4"] = self["YearHiTempExtraTemp4"] / 10
+        self["YearHiTempExtraTemp5"] = self["YearHiTempExtraTemp5"] / 10
+        self["YearHiTempExtraTemp6"] = self["YearHiTempExtraTemp6"] / 10
+        self["YearHiTempExtraTemp7"] = self["YearHiTempExtraTemp7"] / 10
+        self["YearHiTempExtraTemp8"] = self["YearHiTempExtraTemp8"] / 10
+        self["YearHiTempSoil1"] = self["YearHiTempSoil1"] / 10
+        self["YearHiTempSoil2"] = self["YearHiTempSoil2"] / 10
+        self["YearHiTempSoil3"] = self["YearHiTempSoil3"] / 10
+        self["YearHiTempSoil4"] = self["YearHiTempSoil4"] / 10
+        self["YearHiTempLeaf1"] = self["YearHiTempLeaf1"] / 10
+        self["YearHiTempLeaf2"] = self["YearHiTempLeaf2"] / 10
+        self["YearHiTempLeaf3"] = self["YearHiTempLeaf3"] / 10
+        self["YearHiTempLeaf4"] = self["YearHiTempLeaf4"] / 10
+        self["YearLowTempExtraTemp2"] = self["YearLowTempExtraTemp2"] / 10
+        self["YearLowTempExtraTemp3"] = self["YearLowTempExtraTemp3"] / 10
+        self["YearLowTempExtraTemp4"] = self["YearLowTempExtraTemp4"] / 10
+        self["YearLowTempExtraTemp5"] = self["YearLowTempExtraTemp5"] / 10
+        self["YearLowTempExtraTemp6"] = self["YearLowTempExtraTemp6"] / 10
+        self["YearLowTempExtraTemp7"] = self["YearLowTempExtraTemp7"] / 10
+        self["YearLowTempExtraTemp8"] = self["YearLowTempExtraTemp8"] / 10
+        self["YearLowTempSoil1"] = self["YearLowTempSoil1"] / 10
+        self["YearLowTempSoil2"] = self["YearLowTempSoil2"] / 10
+        self["YearLowTempSoil3"] = self["YearLowTempSoil3"] / 10
+        self["YearLowTempSoil4"] = self["YearLowTempSoil4"] / 10
+        self["YearLowTempLeaf1"] = self["YearLowTempLeaf1"] / 10
+        self["YearLowTempLeaf2"] = self["YearLowTempLeaf2"] / 10
+        self["YearLowTempLeaf3"] = self["YearLowTempLeaf3"] / 10
+        self["YearLowTempLeaf4"] = self["YearLowTempLeaf4"] / 10
+        self["TimeDayLowOutHum"] = self["TimeDayLowOutHum"] / 10
+        self["TimeDayLowOutExtraHum2"] = self["TimeDayLowOutExtraHum2"] / 100
+        self["TimeDayLowOutExtraHum3"] = self["TimeDayLowOutExtraHum3"] / 100
+        self["TimeDayLowOutExtraHum4"] = self["TimeDayLowOutExtraHum4"] / 100
+        self["TimeDayLowOutExtraHum5"] = self["TimeDayLowOutExtraHum5"] / 100
+        self["TimeDayLowOutExtraHum6"] = self["TimeDayLowOutExtraHum6"] / 100
+        self["TimeDayLowOutExtraHum7"] = self["TimeDayLowOutExtraHum7"] / 100
+        self["TimeDayLowOutExtraHum8"] = self["TimeDayLowOutExtraHum8"] / 100
+        self["TimeDayHiOutHum"] = self["TimeDayHiOutHum"] / 100
+        self["TimeDayHiOutExtraHum2"] = self["TimeDayHiOutExtraHum2"] / 100
+        self["TimeDayHiOutExtraHum3"] = self["TimeDayHiOutExtraHum3"] / 100
+        self["TimeDayHiOutExtraHum4"] = self["TimeDayHiOutExtraHum4"] / 100
+        self["TimeDayHiOutExtraHum5"] = self["TimeDayHiOutExtraHum5"] / 100
+        self["TimeDayHiOutExtraHum6"] = self["TimeDayHiOutExtraHum6"] / 100
+        self["TimeDayHiOutExtraHum7"] = self["TimeDayHiOutExtraHum7"] / 100
+        self["TimeDayHiOutExtraHum8"] = self["TimeDayHiOutExtraHum8"] / 100
         
 class ArchiveDataParserRevB(DataParser):
     '''Parse data returned by the 'LOOP' command. It contains all of the
@@ -544,6 +876,7 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b'>BBBBBB', data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
 
 
 
