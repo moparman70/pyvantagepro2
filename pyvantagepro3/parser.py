@@ -127,7 +127,7 @@ class HiLowParser(Dict):
     It provides a named fields interface, similiar to C structures."""
 
     def __init__(self, data, data_format, order="="):
-        super(DataParser, self).__init__()
+        super(HiLowParser, self).__init__()
         self.fields, format_t = zip(*data_format)
         self.crc_error = False
         if "CRC" in self.fields:
@@ -544,6 +544,7 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b'>BBBBBB', data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
 
 
 
