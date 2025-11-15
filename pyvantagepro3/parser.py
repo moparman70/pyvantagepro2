@@ -895,36 +895,36 @@ class HighLowParserRevB(HiLowParser):
         self["MonthlyHighBar"] = self["MonthlyHighBar"] / 1000
         self["YearLowBarometer"] = self["YearLowBarometer"] / 1000
         self["YearHighBarometer"] = self["YearHighBarometer"] / 1000
-        self["TimeOfDayLowBar"] = self.unpack_time(self["TimeOfDayLowBar"])
-        self["TimeOfDayHighBar"] = self.unpack_time(self["TimeOfDayHighBar"])
-        self["TimeOfHighWindSpeed"] = self.unpack_time(self["TimeOfHighWindSpeed"])
+        self["TimeOfDayLowBar"] = self["TimeOfDayLowBar"] / 100
+        self["TimeOfDayHighBar"] = self["TimeOfDayHighBar"] / 100
+        self["TimeOfHighWindSpeed"] = self["TimeOfHighWindSpeed"] / 100
         self["DayHiInsideTemp"] = self["DayHiInsideTemp"] / 10
         self["DayLowInsideTemp"] = self["DayLowInsideTemp"] / 10
-        self["TimeDayHiInTemp"] = self.unpack_time(self["TimeDayHiInTemp"])
-        self["TimeDayLowInTemp"] = self.unpack_time(self["TimeDayLowInTemp"])
+        self["TimeDayHiInTemp"] = self["TimeDayHiInTemp"] / 100
+        self["TimeDayLowInTemp"] = self["TimeDayLowInTemp"] / 100
         self["MonthLowInTemp"] = self["MonthLowInTemp"] / 10
         self["MonthHiInTemp"] = self["MonthHiInTemp"] / 10
         self["YearLowInTemp"] = self["YearLowInTemp"] / 10
         self["YearHiInTemp"] = self["YearHiInTemp"] / 10
-        self["TimeDayHiInHum"] = self.unpack_time(self["TimeDayHiInHum"])
-        self["TimeDayLowInHum"] = self.unpack_time(self["TimeDayLowInHum"])
+        self["TimeDayHiInHum"] = self["TimeDayHiInHum"] / 100
+        self["TimeDayLowInHum"] = self["TimeDayLowInHum"] / 100
         self["DayLowOutTemp"] = self["DayLowOutTemp"] / 10
         self["DayHiOutTemp"] = self["DayHiOutTemp"] / 10
-        self["TimeDayLowOutTemp"] = self.unpack_time(self["TimeDayLowOutTemp"])
-        self["TimeDayHiOutTemp"] = self.unpack_time(self["TimeDayHiOutTemp"])
+        self["TimeDayLowOutTemp"] = self["TimeDayLowOutTemp"] / 100
+        self["TimeDayHiOutTemp"] = self["TimeDayHiOutTemp"] / 100
         self["MonthHiOutTemp"] = self["MonthHiOutTemp"] / 10
         self["MonthLowOutTemp"] = self["MonthLowOutTemp"] / 10
         self["YearHiOutTemp"] = self["YearHiOutTemp"] / 10
         self["YearLowOutTemp"] = self["YearLowOutTemp"] / 10
-        self["TimeDayLowDewPoint"] = self.unpack_time(self["TimeDayLowDewPoint"])
-        self["TimeDayHiDewPoint"] = self.unpack_time(self["TimeDayHiDewPoint"])
-        self["TimeDayLowChill"] = self.unpack_time(self["TimeDayLowChill"])
-        self["TimeofDayHighHeat"] = self.unpack_time(self["TimeofDayHighHeat"])
-        self["TimeofDayHighTHSW"] = self.unpack_time(self["TimeofDayHighTHSW"])
-        self["TimeofDayHighSolar"] = self.unpack_time(self["TimeofDayHighSolar"])
-        self["TimeofDayHighUV"] = self.unpack_time(self["TimeofDayHighUV"])
+        self["TimeDayLowDewPoint"] = self["TimeDayLowDewPoint"] / 100
+        self["TimeDayHiDewPoint"] = self["TimeDayHiDewPoint"] / 100
+        self["TimeDayLowChill"] = self["TimeDayLowChill"] / 100
+        self["TimeofDayHighHeat"] = self["TimeofDayHighHeat"] / 100
+        self["TimeofDayHighTHSW"] = self["TimeofDayHighTHSW"] / 100
+        self["TimeofDayHighSolar"] = self["TimeofDayHighSolar"] / 100
+        self["TimeofDayHighUV"] = self["TimeofDayHighUV"] / 100
         self["DayHighRainRate"] = self["DayHighRainRate"] / 100
-        self["TimeofDayHighRainRate"] = self.unpack_time(self["TimeofDayHighRainRate"])
+        self["TimeofDayHighRainRate"] = self["TimeofDayHighRainRate"] / 100
         self["HourHighRainRate"] = self["HourHighRainRate"] / 100
         self["MonthHighRainRate"] = self["MonthHighRainRate"] / 100
         self["YearHighRainRate"] = self["YearHighRainRate"] / 100
@@ -944,64 +944,36 @@ class HighLowParserRevB(HiLowParser):
         self["DayLowTempLeaf3"] = self["DayLowTempLeaf3"] / 10
         self["DayLowTempLeaf4"] = self["DayLowTempLeaf4"] / 10
         self["DayHiTemperature"] = self["DayHiTemperature"] / 10
-        self["TimeDayLowTempExtraTemp2"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp2"]
-        )
-        self["TimeDayLowTempExtraTemp3"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp3"]
-        )
-        self["TimeDayLowTempExtraTemp4"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp4"]
-        )
-        self["TimeDayLowTempExtraTemp5"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp5"]
-        )
-        self["TimeDayLowTempExtraTemp6"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp6"]
-        )
-        self["TimeDayLowTempExtraTemp7"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp7"]
-        )
-        self["TimeDayLowTempExtraTemp8"] = self.unpack_time(
-            self["TimeDayLowTempExtraTemp8"]
-        )
-        self["TimeDayLowTempSoil1"] = self.unpack_time(self["TimeDayLowTempSoil1"])
-        self["TimeDayLowTempSoil2"] = self.unpack_time(self["TimeDayLowTempSoil2"])
-        self["TimeDayLowTempSoil3"] = self.unpack_time(self["TimeDayLowTempSoil3"])
-        self["TimeDayLowTempSoil4"] = self.unpack_time(self["TimeDayLowTempSoil4"])
-        self["TimeDayLowTempLeaf1"] = self.unpack_time(self["TimeDayLowTempLeaf1"])
-        self["TimeDayLowTempLeaf2"] = self.unpack_time(self["TimeDayLowTempLeaf2"])
-        self["TimeDayLowTempLeaf3"] = self.unpack_time(self["TimeDayLowTempLeaf3"])
-        self["TimeDayLowTempLeaf4"] = self.unpack_time(self["TimeDayLowTempLeaf4"])
-        self["TimeDayHiTempExtraTemp2"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp2"]
-        )
-        self["TimeDayHiTempExtraTemp3"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp3"]
-        )
-        self["TimeDayHiTempExtraTemp4"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp4"]
-        )
-        self["TimeDayHiTempExtraTemp5"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp5"]
-        )
-        self["TimeDayHiTempExtraTemp6"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp6"]
-        )
-        self["TimeDayHiTempExtraTemp7"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp7"]
-        )
-        self["TimeDayHiTempExtraTemp8"] = self.unpack_time(
-            self["TimeDayHiTempExtraTemp8"]
-        )
-        self["TimeDayHiTempSoil1"] = self.unpack_time(self["TimeDayHiTempSoil1"])
-        self["TimeDayHiTempSoil2"] = self.unpack_time(self["TimeDayHiTempSoil2"])
-        self["TimeDayHiTempSoil3"] = self.unpack_time(self["TimeDayHiTempSoil3"])
-        self["TimeDayHiTempSoil4"] = self.unpack_time(self["TimeDayHiTempSoil4"])
-        self["TimeDayHiTempLeaf1"] = self.unpack_time(self["TimeDayHiTempLeaf1"])
-        self["TimeDayHiTempLeaf2"] = self.unpack_time(self["TimeDayHiTempLeaf2"])
-        self["TimeDayHiTempLeaf3"] = self.unpack_time(self["TimeDayHiTempLeaf3"])
-        self["TimeDayHiTempLeaf4"] = self.unpack_time(self["TimeDayHiTempLeaf4"])
+        self["TimeDayLowTempExtraTemp2"] = self["TimeDayLowTempExtraTemp2"] / 10
+        self["TimeDayLowTempExtraTemp3"] = self["TimeDayLowTempExtraTemp3"] / 10
+        self["TimeDayLowTempExtraTemp4"] = self["TimeDayLowTempExtraTemp4"] / 10
+        self["TimeDayLowTempExtraTemp5"] = self["TimeDayLowTempExtraTemp5"] / 10
+        self["TimeDayLowTempExtraTemp6"] = self["TimeDayLowTempExtraTemp6"] / 10
+        self["TimeDayLowTempExtraTemp7"] = self["TimeDayLowTempExtraTemp7"] / 10
+        self["TimeDayLowTempExtraTemp8"] = self["TimeDayLowTempExtraTemp8"] / 10
+        self["TimeDayLowTempSoil1"] = self["TimeDayLowTempSoil1"] / 100
+        self["TimeDayLowTempSoil2"] = self["TimeDayLowTempSoil2"] / 100
+        self["TimeDayLowTempSoil3"] = self["TimeDayLowTempSoil3"] / 100
+        self["TimeDayLowTempSoil4"] = self["TimeDayLowTempSoil4"] / 100
+        self["TimeDayLowTempLeaf1"] = self["TimeDayLowTempLeaf1"] / 100
+        self["TimeDayLowTempLeaf2"] = self["TimeDayLowTempLeaf2"] / 100
+        self["TimeDayLowTempLeaf3"] = self["TimeDayLowTempLeaf3"] / 100
+        self["TimeDayLowTempLeaf4"] = self["TimeDayLowTempLeaf4"] / 100
+        self["TimeDayHiTempExtraTemp2"] = self["TimeDayHiTempExtraTemp2"] / 100
+        self["TimeDayHiTempExtraTemp3"] = self["TimeDayHiTempExtraTemp3"] / 100
+        self["TimeDayHiTempExtraTemp4"] = self["TimeDayHiTempExtraTemp4"] / 100
+        self["TimeDayHiTempExtraTemp5"] = self["TimeDayHiTempExtraTemp5"] / 100
+        self["TimeDayHiTempExtraTemp6"] = self["TimeDayHiTempExtraTemp6"] / 100
+        self["TimeDayHiTempExtraTemp7"] = self["TimeDayHiTempExtraTemp7"] / 100
+        self["TimeDayHiTempExtraTemp8"] = self["TimeDayHiTempExtraTemp8"] / 100
+        self["TimeDayHiTempSoil1"] = self["TimeDayHiTempSoil1"] / 100
+        self["TimeDayHiTempSoil2"] = self["TimeDayHiTempSoil2"] / 100
+        self["TimeDayHiTempSoil3"] = self["TimeDayHiTempSoil3"] / 100
+        self["TimeDayHiTempSoil4"] = self["TimeDayHiTempSoil4"] / 100
+        self["TimeDayHiTempLeaf1"] = self["TimeDayHiTempLeaf1"] / 100
+        self["TimeDayHiTempLeaf2"] = self["TimeDayHiTempLeaf2"] / 100
+        self["TimeDayHiTempLeaf3"] = self["TimeDayHiTempLeaf3"] / 100
+        self["TimeDayHiTempLeaf4"] = self["TimeDayHiTempLeaf4"] / 100
         self["MonthHiTempExtraTemp2"] = self["MonthHiTempExtraTemp2"] / 10
         self["MonthHiTempExtraTemp3"] = self["MonthHiTempExtraTemp3"] / 10
         self["MonthHiTempExtraTemp4"] = self["MonthHiTempExtraTemp4"] / 10
@@ -1062,46 +1034,28 @@ class HighLowParserRevB(HiLowParser):
         self["YearLowTempLeaf2"] = self["YearLowTempLeaf2"] / 10
         self["YearLowTempLeaf3"] = self["YearLowTempLeaf3"] / 10
         self["YearLowTempLeaf4"] = self["YearLowTempLeaf4"] / 10
-        self["TimeDayLowOutHum"] = self.unpack_time(self["TimeDayLowOutHum"])
-        self["TimeDayLowOutExtraHum2"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum2"]
-        )
-        self["TimeDayLowOutExtraHum3"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum3"]
-        )
-        self["TimeDayLowOutExtraHum4"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum4"]
-        )
-        self["TimeDayLowOutExtraHum5"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum5"]
-        )
-        self["TimeDayLowOutExtraHum6"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum6"]
-        )
-        self["TimeDayLowOutExtraHum7"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum7"]
-        )
-        self["TimeDayLowOutExtraHum8"] = self.unpack_time(
-            self["TimeDayLowOutExtraHum8"]
-        )
-        self["TimeDayHiOutHum"] = self.unpack_time(self["TimeDayHiOutHum"])
-        self["TimeDayHiOutExtraHum2"] = self.unpack_time(self["TimeDayHiOutExtraHum2"])
-        self["TimeDayHiOutExtraHum3"] = self.unpack_time(self["TimeDayHiOutExtraHum3"])
-        self["TimeDayHiOutExtraHum4"] = self.unpack_time(self["TimeDayHiOutExtraHum4"])
-        self["TimeDayHiOutExtraHum5"] = self.unpack_time(self["TimeDayHiOutExtraHum5"])
-        self["TimeDayHiOutExtraHum6"] = self.unpack_time(self["TimeDayHiOutExtraHum6"])
-        self["TimeDayHiOutExtraHum7"] = self.unpack_time(self["TimeDayHiOutExtraHum7"])
+        self["TimeDayLowOutHum"] = self["TimeDayLowOutHum"] / 10
+        self["TimeDayLowOutExtraHum2"] = self["TimeDayLowOutExtraHum2"] / 100
+        self["TimeDayLowOutExtraHum3"] = self["TimeDayLowOutExtraHum3"] / 100
+        self["TimeDayLowOutExtraHum4"] = self["TimeDayLowOutExtraHum4"] / 100
+        self["TimeDayLowOutExtraHum5"] = self["TimeDayLowOutExtraHum5"] / 100
+        self["TimeDayLowOutExtraHum6"] = self["TimeDayLowOutExtraHum6"] / 100
+        self["TimeDayLowOutExtraHum7"] = self["TimeDayLowOutExtraHum7"] / 100
+        self["TimeDayLowOutExtraHum8"] = self["TimeDayLowOutExtraHum8"] / 100
+        self["TimeDayHiOutHum"] = self["TimeDayHiOutHum"] / 100
+        self["TimeDayHiOutExtraHum2"] = self["TimeDayHiOutExtraHum2"] / 100
+        self["TimeDayHiOutExtraHum3"] = self["TimeDayHiOutExtraHum3"] / 100
+        self["TimeDayHiOutExtraHum4"] = self["TimeDayHiOutExtraHum4"] / 100
+        self["TimeDayHiOutExtraHum5"] = self["TimeDayHiOutExtraHum5"] / 100
+        self["TimeDayHiOutExtraHum6"] = self["TimeDayHiOutExtraHum6"] / 100
+        self["TimeDayHiOutExtraHum7"] = self["TimeDayHiOutExtraHum7"] / 100
         self["TimeDayHiOutExtraHum8"] = self.unpack_time(self["TimeDayHiOutExtraHum8"])
 
     def unpack_time(self, time):
         """Given a packed time field, unpack and return "HH:MM" string."""
 
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
-        return time / 100
-        time = "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
-        date = datetime.now().date().strftime("%Y-%m-%d")
-        format_code = "%Y-%m-%d %H:%M"
-        return datetime.strptime(date + " " + time, format_code)
+        return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
 
 
 class ArchiveDataParserRevB(DataParser):
@@ -1243,4 +1197,3 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
-
