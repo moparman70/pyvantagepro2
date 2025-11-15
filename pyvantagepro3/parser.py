@@ -1104,6 +1104,16 @@ class HighLowParserRevB(HiLowParser):
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
         return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
 
+    def unpack_storm_date(self):
+        """Given a packed storm date field, unpack and return date."""
+
+        date = bytes_to_binary(self.raw_bytes[48:50])
+        date = date[8:16] + date[0:8]
+        year = binary_to_int(date, 0, 7) + 2000
+        day = binary_to_int(date, 7, 12)
+        month = binary_to_int(date, 12, 16)
+        return f"{year}-{month}-{day}"
+    
 class ArchiveDataParserRevB(DataParser):
     """Parse data returned by the 'LOOP' command. It contains all of the real-time data that can be read from the Davis VantagePro2."""
 
@@ -1243,6 +1253,7 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
 
 
 
