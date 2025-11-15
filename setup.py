@@ -16,7 +16,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
     name='pyvantagepro3',
-    version='0.1.3',
+    version='0.1.4',
     url='https://github.com/moparman70/pyvantagepro2',
     license='GNU GPL v3',
     description='Communication tool for the Davis VP2',
