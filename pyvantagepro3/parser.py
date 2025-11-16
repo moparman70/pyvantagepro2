@@ -1140,7 +1140,7 @@ class HighLowParserRevB(HiLowParser):
 
     def unpack_time(self, time):
         """Given a packed time field, unpack and return "HH:MM" string."""
-
+        return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
         timezone = ZoneInfo("America/New_York")
         date_format = "%Y-%m-%d %H:%M"
@@ -1290,3 +1290,4 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
