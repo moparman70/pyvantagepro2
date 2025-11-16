@@ -939,7 +939,10 @@ class HighLowParserRevB(HiLowParser):
         self["TimeofDayHighSolar"] = self.unpack_time(self["TimeofDayHighSolar"])
         self["TimeofDayHighUV"] = self.unpack_time(self["TimeofDayHighUV"])
         self["DayHighRainRate"] = self["DayHighRainRate"] / 100
-        self["TimeofDayHighRainRate"] = self.unpack_time(self["TimeofDayHighRainRate"])
+        if int(self["TimeofDayHighRainRate"]) != 65535:
+            self["TimeofDayHighRainRate"] = self.unpack_time(
+                self["TimeofDayHighRainRate"]
+            )
         self["HourHighRainRate"] = self["HourHighRainRate"] / 100
         self["MonthHighRainRate"] = self["MonthHighRainRate"] / 100
         self["YearHighRainRate"] = self["YearHighRainRate"] / 100
@@ -1140,7 +1143,7 @@ class HighLowParserRevB(HiLowParser):
 
     def unpack_time(self, time):
         """Given a packed time field, unpack and return "HH:MM" string."""
-        return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
+
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
         timezone = ZoneInfo("America/New_York")
         date_format = "%Y-%m-%d %H:%M"
@@ -1290,4 +1293,3 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
-
