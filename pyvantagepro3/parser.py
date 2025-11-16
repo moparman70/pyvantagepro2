@@ -939,10 +939,7 @@ class HighLowParserRevB(HiLowParser):
         self["TimeofDayHighSolar"] = self.unpack_time(self["TimeofDayHighSolar"])
         self["TimeofDayHighUV"] = self.unpack_time(self["TimeofDayHighUV"])
         self["DayHighRainRate"] = self["DayHighRainRate"] / 100
-        if int(self["TimeofDayHighRainRate"]) != 65535:
-            self["TimeofDayHighRainRate"] = self.unpack_time(
-                self["TimeofDayHighRainRate"]
-            )
+        self["TimeofDayHighRainRate"] = self.unpack_time(self["TimeofDayHighRainRate"])
         self["HourHighRainRate"] = self["HourHighRainRate"] / 100
         self["MonthHighRainRate"] = self["MonthHighRainRate"] / 100
         self["YearHighRainRate"] = self["YearHighRainRate"] / 100
@@ -1144,6 +1141,9 @@ class HighLowParserRevB(HiLowParser):
     def unpack_time(self, time):
         """Given a packed time field, unpack and return "HH:MM" string."""
 
+        if time == 65535:
+            return time
+
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
         timezone = ZoneInfo("America/New_York")
         date_format = "%Y-%m-%d %H:%M"
@@ -1152,6 +1152,7 @@ class HighLowParserRevB(HiLowParser):
         date = datetime.now().date().strftime("%Y-%m-%d")
         datetime_object = datetime.strptime(date + " " + time, date_format)
         datetime_object.replace(tzinfo=timezone)
+        return datetime_object
 
 
 class ArchiveDataParserRevB(DataParser):
