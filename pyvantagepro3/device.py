@@ -2,6 +2,7 @@
 
 from datetime import datetime, timedelta
 import struct
+import logging
 
 from pylink import link_from_url
 
@@ -347,5 +348,6 @@ class VantagePro2:
             self.RevB = False
         else:
             self.RevA = False
+
 
 
