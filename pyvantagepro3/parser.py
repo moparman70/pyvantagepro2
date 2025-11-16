@@ -888,9 +888,6 @@ class HighLowParserRevB(HiLowParser):
     def __init__(self, data) -> None:
         """Initalize."""
 
-    def __init__(self, data) -> None:
-        """Initalize."""
-
         super().__init__(data, self.LOOP_FORMAT)
         self["DailyLowBarometer"] = self["DailyLowBarometer"] / 1000
         self["DailyHighBarometer"] = self["DailyHighBarometer"] / 1000
@@ -1251,6 +1248,7 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
+
 
 
 
