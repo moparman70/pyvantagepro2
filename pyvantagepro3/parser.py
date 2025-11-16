@@ -1151,8 +1151,7 @@ class HighLowParserRevB(HiLowParser):
         time = "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
         date = datetime.now().date().strftime("%Y-%m-%d")
         datetime_object = datetime.strptime(date + " " + time, date_format)
-        datetime_object.replace(tzinfo=timezone)
-        return datetime_object
+        return datetime_object.replace(tzinfo=timezone)
 
 
 class ArchiveDataParserRevB(DataParser):
@@ -1294,4 +1293,3 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
-
