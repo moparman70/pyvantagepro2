@@ -4,6 +4,7 @@ from array import array
 from datetime import datetime
 import logging
 import struct
+from zoneinfo import ZoneInfo
 
 from .utils import Dict, binary_to_int, bytes_to_binary, bytes_to_hex, cached_property
 
@@ -664,7 +665,21 @@ class HighLowParserRevB(HiLowParser):
         ("DayLowTempLeaf2", "B"),
         ("DayLowTempLeaf3", "B"),
         ("DayLowTempLeaf4", "B"),
-        ("DayHiTemperature", "B"),
+        ("DayHiTempExtraTemp2", "B"),
+        ("DayHiTempExtraTemp3", "B"),
+        ("DayHiTempExtraTemp4", "B"),
+        ("DayHiTempExtraTemp5", "B"),
+        ("DayHiTempExtraTemp6", "B"),
+        ("DayHiTempExtraTemp7", "B"),
+        ("DayHiTempExtraTemp8", "B"),
+        ("DayHiTempSoil1", "B"),
+        ("DayHiTempSoil2", "B"),
+        ("DayHiTempSoil3", "B"),
+        ("DayHiTempSoil4", "B"),
+        ("DayHiTempLeaf1", "B"),
+        ("DayHiTempLeaf2", "B"),
+        ("DayHiTempLeaf3", "B"),
+        ("DayHiTempLeaf4", "B"),
         ("TimeDayLowTempExtraTemp2", "H"),
         ("TimeDayLowTempExtraTemp3", "H"),
         ("TimeDayLowTempExtraTemp4", "H"),
@@ -1097,18 +1112,15 @@ class HighLowParserRevB(HiLowParser):
         """Given a packed time field, unpack and return "HH:MM" string."""
 
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
-        return "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
+        timezone = ZoneInfo("America/New_York")
+        date_format = "%Y-%m-%d %H:%M"
 
-    def unpack_storm_date(self):
-        """Given a packed storm date field, unpack and return date."""
+        time = "%02d:%02d" % divmod(time, 100)  # covert to "06:01"  # noqa: UP031
+        date = datetime.now().date().strftime("%Y-%m-%d")
+        datetime_object = datetime.strptime(date + " " + time, date_format)
+        datetime_object.replace(tzinfo=timezone)
 
-        date = bytes_to_binary(self.raw_bytes[48:50])
-        date = date[8:16] + date[0:8]
-        year = binary_to_int(date, 0, 7) + 2000
-        day = binary_to_int(date, 7, 12)
-        month = binary_to_int(date, 12, 16)
-        return f"{year}-{month}-{day}"
-    
+
 class ArchiveDataParserRevB(DataParser):
     """Parse data returned by the 'LOOP' command. It contains all of the real-time data that can be read from the Davis VantagePro2."""
 
@@ -1248,11 +1260,3 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
-
-
-
-
-
-
-
-
