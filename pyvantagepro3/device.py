@@ -18,6 +18,8 @@ from .parser import (
 )
 from .utils import ListDict, cached_property, is_bytes, retry
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class NoDeviceException(Exception):
     """Can not access weather station."""
@@ -345,4 +347,5 @@ class VantagePro2:
             self.RevB = False
         else:
             self.RevA = False
+
 
