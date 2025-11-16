@@ -177,6 +177,7 @@ class VantagePro2:
         self.wake_up()
         self.send("HILOWS", self.ACK)
         current_data = self.link.read(436)
+        _LOGGER.error(current_data)
         if isinstance(current_data, bytes):
             if self.RevB:
                 return HighLowParserRevB(current_data)
@@ -344,3 +345,4 @@ class VantagePro2:
             self.RevB = False
         else:
             self.RevA = False
+
