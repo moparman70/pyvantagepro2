@@ -958,7 +958,21 @@ class HighLowParserRevB(HiLowParser):
         self["DayLowTempLeaf2"] = self["DayLowTempLeaf2"] / 10
         self["DayLowTempLeaf3"] = self["DayLowTempLeaf3"] / 10
         self["DayLowTempLeaf4"] = self["DayLowTempLeaf4"] / 10
-        self["DayHiTemperature"] = self["DayHiTemperature"] / 10
+        self["DayHiTempExtraTemp2"] = self["DayHiTempExtraTemp2"] / 10
+        self["DayHiTempExtraTemp3"] = self["DayHiTempExtraTemp3"] / 10
+        self["DayHiTempExtraTemp4"] = self["DayHiTempExtraTemp4"] / 10
+        self["DayHiTempExtraTemp5"] = self["DayHiTempExtraTemp5"] / 10
+        self["DayHiTempExtraTemp6"] = self["DayHiTempExtraTemp6"] / 10
+        self["DayHiTempExtraTemp7"] = self["DayHiTempExtraTemp7"] / 10
+        self["DayHiTempExtraTemp8"] = self["DayHiTempExtraTemp8"] / 10
+        self["DayHiTempSoil1"] = self["DayHiTempSoil1"] / 10
+        self["DayHiTempSoil2"] = self["DayHiTempSoil2"] / 10
+        self["DayHiTempSoil3"] = self["DayHiTempSoil3"] / 10
+        self["DayHiTempSoil4"] = self["DayHiTempSoil4"] / 10
+        self["DayHiTempLeaf1"] = self["DayHiTempLeaf1"] / 10
+        self["DayHiTempLeaf2"] = self["DayHiTempLeaf2"] / 10
+        self["DayHiTempLeaf3"] = self["DayHiTempLeaf3"] / 10
+        self["DayHiTempLeaf4"] = self["DayHiTempLeaf4"] / 10
         self["TimeDayLowTempExtraTemp2"] = self.unpack_time(
             self["TimeDayLowTempExtraTemp2"]
         )
@@ -1107,10 +1121,26 @@ class HighLowParserRevB(HiLowParser):
         self["TimeDayHiOutExtraHum6"] = self.unpack_time(self["TimeDayHiOutExtraHum6"])
         self["TimeDayHiOutExtraHum7"] = self.unpack_time(self["TimeDayHiOutExtraHum7"])
         self["TimeDayHiOutExtraHum8"] = self.unpack_time(self["TimeDayHiOutExtraHum8"])
+        self["TimeDayHiLeafWetness1"] = self.unpack_time(self["TimeDayHiLeafWetness1"])
+        self["TimeDayHiLeafWetness2"] = self.unpack_time(self["TimeDayHiLeafWetness2"])
+        self["TimeDayHiLeafWetness3"] = self.unpack_time(self["TimeDayHiLeafWetness3"])
+        self["TimeDayHiLeafWetness4"] = self.unpack_time(self["TimeDayHiLeafWetness4"])
+        self["TimeDayLowLeafWetness1"] = self.unpack_time(
+            self["TimeDayLowLeafWetness1"]
+        )
+        self["TimeDayLowLeafWetness2"] = self.unpack_time(
+            self["TimeDayLowLeafWetness2"]
+        )
+        self["TimeDayLowLeafWetness3"] = self.unpack_time(
+            self["TimeDayLowLeafWetness3"]
+        )
+        self["TimeDayLowLeafWetness4"] = self.unpack_time(
+            self["TimeDayLowLeafWetness4"]
+        )
 
     def unpack_time(self, time):
         """Given a packed time field, unpack and return "HH:MM" string."""
-        return "%02d:%02d" % divmod(time, 100)
+
         # format: HHMM, and space padded on the left.ex: "601" is 6:01 AM
         timezone = ZoneInfo("America/New_York")
         date_format = "%Y-%m-%d %H:%M"
@@ -1260,4 +1290,3 @@ def unpack_datetime(data):
     VantageProCRC(data).check()
     s, m, h, day, month, year = struct.unpack(b">BBBBBB", data[:6])
     return datetime(year + 1900, month, day, h, m, s)
-
