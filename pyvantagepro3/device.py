@@ -2,7 +2,6 @@
 
 from datetime import datetime, timedelta
 import struct
-import logging
 
 from pylink import link_from_url
 
@@ -18,8 +17,6 @@ from .parser import (
     unpack_datetime,
 )
 from .utils import ListDict, cached_property, is_bytes, retry
-
-_LOGGER = logging.getLogger(__name__)
 
 
 class NoDeviceException(Exception):
@@ -118,18 +115,14 @@ class VantagePro2:
         """
 
         if is_bytes(data):
-            #            LOGGER.info("try send : %s" % bytes_to_hex(data))
             self.link.write(data)
         else:
-            #            LOGGER.info("try send : %s" % data)
             self.link.write(f"{data}\n")
         if wait_ack is None:
             return True
         ack = self.link.read(len(wait_ack), timeout=timeout)
         if wait_ack == ack:
-            #            LOGGER.info("Check ACK: OK (%s)" % (repr(ack)))
             return True
-        #        LOGGER.error("Check ACK: BAD (%s != %s)" % (repr(wait_ack), repr(ack)))
         raise BadAckException
 
     @retry(tries=3, delay=1)
@@ -180,7 +173,6 @@ class VantagePro2:
         self.wake_up()
         self.send("HILOWS", self.ACK)
         current_data = self.link.read(436)
-        _LOGGER.error(current_data)
         if isinstance(current_data, bytes):
             if self.RevB:
                 return HighLowParserRevB(current_data)
@@ -348,6 +340,3 @@ class VantagePro2:
             self.RevB = False
         else:
             self.RevA = False
-
-
-
